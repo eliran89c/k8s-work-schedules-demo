@@ -1,0 +1,10 @@
+apiVersion: example.com/v1
+kind: WorkSchedule
+metadata:
+  name: ny-work-hours
+
+spec:
+  startTime: "09:00"
+  endTime: "17:00"
+  timeZone: America/New_York
+

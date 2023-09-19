@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: workschedule-operator
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: workschedule-operator
+  namespace: workschedule-operator
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workschedule-operator
+  namespace: workschedule-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workschedule-operator
+  template:
+    metadata:
+      labels:
+        app: workschedule-operator
+    spec:
+      serviceAccountName: workschedule-operator
+      containers:
+        - name: workschedule-operator
+          image: eliran89c/workschedule-operator:latest
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: workschedule-operator-clusterrole
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["patch", "watch", "list", "get"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create"]
+- apiGroups: ["example.com"]
+  resources: ["workschedules"]
+  verbs: ["get"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: workschedule-operator-clusterrolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: workschedule-operator-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: workschedule-operator
+  namespace: workschedule-operator  # Change this if your ServiceAccount is in another namespace
