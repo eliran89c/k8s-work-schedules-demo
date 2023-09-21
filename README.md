@@ -3,4 +3,4 @@ Demo project illustrating how to extend Kubernetes with custom resource definiti
 
 For a comprehensive explanation of the code and the concepts behind it, please refer to the following blog post:
 
-[Expanding Your Kubernetes Toolbox: The Power of CRDs](https://medium.com/@eliran89c)
+[Expanding Your Kubernetes Toolbox: The Power of CRDs](https://medium.com/@eliran89c/expanding-your-kubernetes-toolbox-the-power-of-crds-6ac0ae99960c)
